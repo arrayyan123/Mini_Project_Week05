@@ -16,4 +16,8 @@ class MealRepository(private val api: MealApi) {
     suspend fun getMealDetail(id: String): MealDetail? {
         return api.getMealDetail(id).meals?.firstOrNull()
     }
+
+    suspend fun getRandomMeal(): MealDetail? {
+        return api.getRandomMeal().meals?.firstOrNull()
+    }
 }
