@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.arrayyan.mini_project_week05.data.network.MealApi
 import com.arrayyan.mini_project_week05.data.repository.MealRepository
 import com.arrayyan.mini_project_week05.databinding.FragmentFavoritesBinding
+import com.arrayyan.mini_project_week05.viewmodel.FavoritesViewModel
 import com.bumptech.glide.Glide
 
 class FavoritesFragment : Fragment() {
@@ -16,9 +17,7 @@ class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: FavoritesViewModel by viewModels {
-        FavoritesViewModelFactory(MealRepository(MealApi.create()))
-    }
+    private val viewModel: FavoritesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

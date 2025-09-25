@@ -1,16 +1,14 @@
-package com.arrayyan.mini_project_week05.ui.favorites
+package com.arrayyan.mini_project_week05.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.arrayyan.mini_project_week05.data.model.MealDetail
+import com.arrayyan.mini_project_week05.data.network.MealApi
 import com.arrayyan.mini_project_week05.data.repository.MealRepository
 import kotlinx.coroutines.launch
 
-class FavoritesViewModel(
-    private val repository: MealRepository
-) : ViewModel() {
+class FavoritesViewModel : ViewModel() {
+
+    private val repository = MealRepository(MealApi.create())
 
     private val _randomMeal = MutableLiveData<MealDetail?>()
     val randomMeal: LiveData<MealDetail?> = _randomMeal
@@ -24,6 +22,7 @@ class FavoritesViewModel(
             try {
                 _randomMeal.value = repository.getRandomMeal()
             } catch (e: Exception) {
+                e.printStackTrace()
                 _randomMeal.value = null
             }
         }
