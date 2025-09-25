@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+
+import androidx.lifecycle.lifecycleScope
+
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.arrayyan.mini_project_week05.databinding.FragmentCategoriesBinding
@@ -15,7 +19,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.arrayyan.mini_project_week05.data.model.Category
+import com.arrayyan.mini_project_week05.data.model.MealSummary
+import com.arrayyan.mini_project_week05.data.network.NetworkModule
 import com.arrayyan.mini_project_week05.databinding.ItemMealBinding
+
+import com.arrayyan.mini_project_week05.ui.adapter.MealDropdownAdapter
+import kotlinx.coroutines.launch
 
 class CategoriesFragment : Fragment() {
 
@@ -52,6 +61,34 @@ class CategoriesFragment : Fragment() {
         }
         vm.error.observe(viewLifecycleOwner) { err ->
             err?.let { Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() }
+        }
+
+        val searchView = binding.searchView
+
+        // Saat user pilih salah satu item dari dropdown
+        searchView.setOnItemClickListener { parent, _, position, _ ->
+            val item = parent.getItemAtPosition(position) as MealSummary
+            val id = item.idMeal ?: return@setOnItemClickListener
+            val action = CategoriesFragmentDirections.actionToMealDetail(id)
+            findNavController().navigate(action)
+        }
+
+        searchView.addTextChangedListener { text ->
+            val keyword = text?.toString()?.trim().orEmpty()
+            if (keyword.length >= 2) {
+                lifecycleScope.launch {
+                    try {
+                        val response = NetworkModule.mealApi.searchMeals(keyword)
+                        val meals = response.meals ?: emptyList()
+                        val dropAdapter = MealDropdownAdapter(requireContext(), meals)
+                        searchView.setAdapter(dropAdapter)
+                        dropAdapter.notifyDataSetChanged()
+                        searchView.showDropDown()
+                    } catch (e: Exception) {
+                        Toast.makeText(requireContext(), "Gagal cari: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 

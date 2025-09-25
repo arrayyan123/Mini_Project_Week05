@@ -8,9 +8,14 @@
         android:id="@+id/categoriesFragment"
         android:name="com.arrayyan.mini_project_week05.ui.categories.CategoriesFragment"
         android:label="Categories">
+
         <action
             android:id="@+id/actionToMeals"
             app:destination="@id/mealsFragment" />
+
+        <action
+            android:id="@+id/actionToMealDetail"
+            app:destination="@id/mealDetailFragment" />
     </fragment>
 
     <fragment

@@ -12,6 +12,9 @@ interface MealApi {
     @GET("categories.php")
     suspend fun getCategories(): CategoryResponse
 
+    @GET("search.php")
+    suspend fun searchMeals(@Query("s") query: String): MealsResponse
+    
     @GET("random.php")
     suspend fun getRandomMeal(): MealDetailResponse
 

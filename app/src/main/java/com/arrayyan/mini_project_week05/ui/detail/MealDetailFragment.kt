@@ -28,6 +28,8 @@ class MealDetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val mealId = args.mealId
+
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         vm.loadDetail(args.mealId)
 
